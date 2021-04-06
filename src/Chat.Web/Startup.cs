@@ -1,34 +1,25 @@
 using ChatApp.Domain.Models;
 using ChatApp.Infra.Context;
+using ChatApp.Infra.Repository;
+using ChatApp.Infra.RepositoryInterface;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Chat.Web
 {
     public class Startup
     {
-        //public Startup(IConfiguration configuration)
-        //{
-        //    Configuration = configuration;
-        //}
-
         public IConfiguration Configuration { get; }
         public Startup(IWebHostEnvironment hostEnvironment)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(hostEnvironment.ContentRootPath)
                 .AddJsonFile("appsettings.json", true, true)
-                //.AddJsonFile($"appsettings.{hostEnvironment.EnvironmentName}.json", true, true)
                 .AddEnvironmentVariables();
 
             Configuration = builder.Build();
@@ -41,7 +32,8 @@ namespace Chat.Web
 
             services.AddDbContext<AppDbContext>(
               opt => opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-          
+
+            services.AddControllersWithViews();
 
             services.AddIdentity<User, IdentityRole>(options =>
             {
@@ -54,7 +46,10 @@ namespace Chat.Web
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddControllersWithViews();
+            services.AddTransient<IChatRepository, ChatRepository>();
+
+            services.AddSignalR();
+
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

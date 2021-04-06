@@ -18,4 +18,8 @@
     <ProjectReference Include="..\Chat.Infra\ChatApp.Infra.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\js\" />
+  </ItemGroup>
+
 </Project>
