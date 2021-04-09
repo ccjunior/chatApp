@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChatApp.Domain.Hubs
+namespace ChatApp.Web.Hubs
 {
     public class ChatHub : Hub
     {

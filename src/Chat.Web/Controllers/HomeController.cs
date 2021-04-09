@@ -1,7 +1,8 @@
-﻿using ChatApp.Domain.Hubs;
+﻿using ChatApp.Domain.Models;
 using ChatApp.Infra.Context;
 using ChatApp.Infra.RepositoryInterface;
 using ChatApp.Web.Extensions;
+using ChatApp.Web.Hubs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -17,7 +18,7 @@ namespace ChatApp.Web.Controllers
         public HomeController(IChatRepository repo) => _repo = repo;
         public IActionResult Index()
         {
-            var chats = _repo.GetChats(GetUserId());
+            var chats = _repo.GetChats(GetUserId()).ToList();
 
             return View(chats);
         }
@@ -48,6 +49,12 @@ namespace ChatApp.Web.Controllers
         [HttpGet("{id}")]
         public IActionResult Chat(int id)
         {
+            if (id == 0)
+            {
+                var chat = _repo.GetChats(GetUserId()).First();
+                return View(_repo.GetChat(chat.Id));
+            }
+
             return View(_repo.GetChat(id));
         }
 

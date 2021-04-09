@@ -6,6 +6,10 @@ namespace ChatApp.Infra.Context
 {
     public class AppDbContext : IdentityDbContext<User>
     {
+        public AppDbContext()
+        {
+
+        }
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
         public DbSet<Chat> Chats { get; set; }
@@ -18,6 +22,14 @@ namespace ChatApp.Infra.Context
 
             builder.Entity<ChatUser>()
                 .HasKey(x => new { x.ChatId, x.UserId });
+
+            builder.Entity<Chat>().HasData(
+                new Chat
+                {
+                    Id = 1,
+                    Name = "Chat Administrativo",
+                    Type = Domain.Enum.ChatType.Room,
+                });
         }
     }
 }
